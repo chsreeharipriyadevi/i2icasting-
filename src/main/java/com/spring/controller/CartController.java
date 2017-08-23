@@ -7,6 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.spring.dao.CartDAO;
 import com.spring.dao.ProductDAO;
 import com.spring.model.Cart;
@@ -65,5 +68,20 @@ public class CartController {
     	
     	return "CartPage";
     }
+    
+    @RequestMapping(value="editCart/{id}",method=RequestMethod.GET)
+	public String editProduct(@PathVariable("id") int id,RedirectAttributes attributes)
+	{
+		attributes.addFlashAttribute("cart", this.cartDAO.getCartById(id));
+		return "redirect:/cart";
+	   }
+	
+	@RequestMapping(value="removeCart/{id}",method=RequestMethod.GET)
+	public String removeProduct(@PathVariable("id") int id,RedirectAttributes attributes)
+	{
+		cartDAO.removeCartById(id);
+		attributes.addFlashAttribute("DeleteMessage", "Cart item has been deleted Successfully");
+		return "redirect:/cart";
+	   }
 
 }
