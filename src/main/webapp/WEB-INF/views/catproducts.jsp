@@ -39,7 +39,7 @@ $(document).ready(function(){
 
 							${product.name}<br> <i class="fa fa-inr" aria-hidden="true"></i>
 							${product.price}
-									<form action="addtoCart/${product.id}">
+									<form action="addToCart/${product.id}">
 										<input type="submit" value="Add to Cart"
 											class="btn btn-xs btn-success btn-block">
 

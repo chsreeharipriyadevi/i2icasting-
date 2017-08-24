@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,10 +42,12 @@ public class CartDAOImpl implements CartDAO {
 		return null;
 	}
 
-     @Transactional
-     @SuppressWarnings({ "unchecked", "deprecation" })
+    @Transactional
 	public List<Cart> list() {
-		List<Cart> listCart = (List<Cart>)sessionFactory.getCurrentSession().createCriteria(Cart.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+    	 
+    	 @SuppressWarnings({ "unchecked", "deprecation" }) 
+		List<Cart> listCart = (List<Cart>)sessionFactory.getCurrentSession()
+				.createQuery("from Cart").list();
 		
 		return listCart;
 		
@@ -73,6 +77,16 @@ public class CartDAOImpl implements CartDAO {
  		sessionFactory.getCurrentSession().delete(CartToDelete);
  		return CartToDelete;
  		
+ 	}
+     @SuppressWarnings("deprecation")
+ 	@Transactional
+ 	public double CartPrice(int userId) {
+ 		Criteria c=sessionFactory.getCurrentSession().createCriteria(Cart.class);
+ 		c.add(Restrictions.eq("userid", userId));
+ 		//c.add(Restrictions.eq("status","C"));
+ 		c.setProjection(Projections.sum("PRODUCTPRICE"));
+ 		Double l= (Double)c.uniqueResult();
+ 		return l;
  	}
 
 

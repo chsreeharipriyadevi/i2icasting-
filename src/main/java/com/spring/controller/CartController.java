@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.spring.dao.CartDAO;
@@ -45,7 +46,7 @@ public class CartController {
 			model.addAttribute("message", p.getName() +"is already exist");
 			item.setSubTotal(item.getProductPrice() + (q*p.getPrice()));
 			cartDAO.saveProductToCart(item);
-			return "cart";
+			return "redirect:/cart";
 		} else {
 			Cart item = new Cart();
 			Product p = productDAO.getProductById(id);
@@ -62,20 +63,15 @@ public class CartController {
     }
     
     @RequestMapping(value="/cart")
-    public String cartPage(Model model){
+    public String cartPage(Model model,HttpSession session){
     	model.addAttribute("cart", new Cart());
     	model.addAttribute("cartList", cartDAO.list());
+    	//model.addAttribute("cartprice", cartDAO.CartPrice((Integer) session.getAttribute("userid")));
     	
     	return "CartPage";
     }
     
-    @RequestMapping(value="editCart/{id}",method=RequestMethod.GET)
-	public String editProduct(@PathVariable("id") int id,RedirectAttributes attributes)
-	{
-		attributes.addFlashAttribute("cart", this.cartDAO.getCartById(id));
-		return "redirect:/cart";
-	   }
-	
+  
 	@RequestMapping(value="removeCart/{id}",method=RequestMethod.GET)
 	public String removeProduct(@PathVariable("id") int id,RedirectAttributes attributes)
 	{
@@ -83,5 +79,26 @@ public class CartController {
 		attributes.addFlashAttribute("DeleteMessage", "Cart item has been deleted Successfully");
 		return "redirect:/cart";
 	   }
+	
+	 @RequestMapping("editCart/{id}")
+		public String editorder(@PathVariable("id") int id, @RequestParam("productQuantity") int q, HttpSession session) {
+			Cart cart = cartDAO.getCartById(id);
+			Product product = productDAO.getProductById(cart.getProductid());
+			System.out.println("cartlist==="+cart.getProductid());
+			System.out.println("productlist="+product);
+			cart.setProductQuantity(q);
+			cart.setProductPrice(q * product.getPrice());
+			cartDAO.saveProductToCart(cart);
+			//session.setAttribute("cartsize", cartDAO.cartsize((Integer) session.getAttribute("userid")));
+			return "redirect:/cart";
+		}
+
+	 @RequestMapping(value="/CheckoutPage")
+	 public String checkoutPage (Model model){
+		 model.addAttribute("cart", new Cart());
+		 model.addAttribute("cartList", cartDAO.list()); 
+		 return "checkout";
+	 }
+
 
 }
