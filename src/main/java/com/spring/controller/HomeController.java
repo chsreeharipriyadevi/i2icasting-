@@ -137,6 +137,17 @@ public class HomeController {
 		return "catproducts";
 	}
 	
+	
+	
+	@RequestMapping(value = "welcomepage")
+	public String WelcomePage(Model model) {
+	
+		model.addAttribute("Clickedcatproduct", "true");
+		return "WelcomePage";
+	}
+
+	
+	
 /*
 	  @RequestMapping(value ="nav/{id}" )
 	    public String ShowProduct(@PathVariable("id") int id,RedirectAttributes attributes,Model m) {

@@ -93,12 +93,26 @@ public class CartController {
 			return "redirect:/cart";
 		}
 
-	 @RequestMapping(value="/CheckoutPage")
+	 @RequestMapping(value="/checkoutpage")
 	 public String checkoutPage (Model model){
 		 model.addAttribute("cart", new Cart());
 		 model.addAttribute("cartList", cartDAO.list()); 
-		 return "checkout";
+		 return "CheckoutPage";
 	 }
+	 
+	 @RequestMapping(value="/cash")
+	 public String EnterAddress (Model model){
+		 model.addAttribute("cart", new Cart());
+		 model.addAttribute("cartList", cartDAO.list()); 
+		 return "cod";
+	 }
+	 
+	 @RequestMapping(value="/Success")
+		public String SuccessPage(Model model) {
+		
+			model.addAttribute("Clickedcatproduct", "true");
+			return "success";
+		}
 
 
 }
